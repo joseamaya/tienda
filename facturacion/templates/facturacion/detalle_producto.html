@@ -1,0 +1,25 @@
+{% extends "facturacion/base.html" %}
+
+{% block main_content %}
+<div class="row-fluid">
+	<div class="span4">
+	</div>
+	<div class="span4">
+		DESCRIPCION: {{ producto.descripcion }}
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span4">
+	</div>
+	<div class="span4">
+		PRECIO: {{ producto.precio }}
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span4">
+	</div>
+	<div class="span4">
+		UNIDAD: {{ producto.unidad }}
+	</div>
+</div>
+{% endblock main_content %}

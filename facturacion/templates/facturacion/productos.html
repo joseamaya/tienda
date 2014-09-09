@@ -1,0 +1,40 @@
+{% extends "facturacion/base.html" %}
+
+{% block main_content %}
+<table class="table table-striped">
+        <tbhead>
+            <tr>
+                <th>DESCRIPCION</th>
+                <th>PRECIO</th>
+                <th>UNIDAD</th>
+                <th>VER</th>
+                <th>EDITAR</th>
+                <th>BORRAR</th>                
+            </tr>
+        </tbhead>
+        <tbody>
+        {% for producto in productos %}
+            <tr>
+                <td>{{ producto.descripcion }}</td>
+                <td>{{ producto.precio }}</td>
+                <td>{{ producto.unidad }}</td>
+                <td>
+                    <a class="btn btn-small" href="{% url 'facturacion:producto' producto.pk %}">
+                        <i class="icon-eye-open"></i>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-small" href="#">
+                        <i class="icon-pencil"></i>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-small" href="#">
+                        <i class="icon-trash"></i>
+                    </a>
+                </td>
+            </tr>        
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock main_content %}

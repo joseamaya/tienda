@@ -1,0 +1,40 @@
+{% extends "facturacion/base.html" %}
+
+{% block main_content %}
+<table class="table table-striped">
+        <tbhead>
+            <tr>
+                <th>RUC</th>
+                <th>RAZON SOCIAL</th>
+                <th>DIRECCION</th>
+                <th>VER</th>
+                <th>EDITAR</th>
+                <th>BORRAR</th>
+            </tr>
+        </tbhead>
+        <tbody>
+        {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.ruc }}</td>
+                <td>{{ cliente.razon_social }}</td>
+                <td>{{ cliente.direccion }}</td>
+                <td>
+                    <a class="btn btn-small" href="{% url 'facturacion:cliente' cliente.pk %}">
+                        <i class="icon-eye-open"></i>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-small" href="#">
+                        <i class="icon-pencil"></i>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-small" href="#">
+                        <i class="icon-trash"></i>
+                    </a>
+                </td>
+            </tr>        
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock main_content %}

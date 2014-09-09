@@ -1,0 +1,24 @@
+{% extends "facturacion/base.html" %}
+
+{% block main_content %}
+    <form method="post" action="">{% csrf_token %}
+        <legend>INGRESE UN NUEVO CLIENTE</legend>
+        <div class="row-fluid">
+			<div class="span4">
+			</div>
+            <div class="span4">
+            	{{ form.as_p }}
+            </div>
+        	<div class="span4">
+			</div>
+        </div>
+
+        <div class="row-fluid">
+        	<div class="span4">
+			</div>
+            <div class="span4"><button type="submit" class="btn btn-success">Guardar Cliente</button></div>
+        	<div class="span4">
+			</div>
+        </div>
+    </form>
+{% endblock main_content %}

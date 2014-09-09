@@ -1,0 +1,239 @@
+{% extends "facturacion/base.html" %}
+
+{% block main_content %}
+
+	<form action="{% url 'facturacion:guardarFactura' %}" method="post" class="form-control">
+		{% csrf_token %}
+		<legend>INTIX S.R.L</legend>
+		<div class="row-fluid">
+			<div class="span4">
+			</div>
+			<div class="span4">					
+			</div>
+			<div class="span4 well">
+				<p>RUC: 20530147399</p>
+				Serie<input type="text" name="serie" id="serie" value="{{ serie.serie }}" /><br/>
+				N°<input type="text" name="numero" id="numero" value="{{ serie.numerador }}" /> 	
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span8">
+				Señor: 
+				<select id="clientes" name="clientes">
+					<option>Elige un cliente</option>
+					{% for cliente in clientes %}
+						<option value="{{ cliente.ruc }}">{{ cliente.razon_social }}</option>
+					{% endfor %}}
+				</select>
+				<a href="{% url 'facturacion:nuevoCliente' %}" class="btn" role="button">
+					<i class="icon-plus icon-black"></i>
+				</a>
+				
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span8">
+				RUC<input type="text" name="ruc" id="ruc" maxlength="11" size="11" />
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span8">
+				Direccion<input type="text" name="direccion" id="direccion" maxlength="150" size="50" /> <br/>	
+			</div>
+			<div class="span4">
+				Fecha<input type="text" name="fecha" id="fecha"/><br />
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<table class="table table-bordered table-hover table-condensed">
+					<caption>DETALLE</caption>
+					<tbhead>
+						<tr>
+							<th>CANTIDAD</th>
+							<th>UNIDAD</th>
+							<th>DESCRIPCION</th>
+							<th>P. UNITARIO</th>
+							<th>IMPORTE</th>
+						</tr>
+					</tbhead>
+					<tbody>
+						<tr>
+							<td>
+								<input type="text" name="cantidad1" id="cantidad1" maxlength="7" />
+							</td>
+							<td>
+								<input type="text" name="unidad1" id="unidad1" maxlength="7" size="7" />
+							</td>
+							<td>
+								<select id="productos1" name="productos1">
+									<option>Elige un producto</option>
+									{% for producto in productos %}
+										<option value="{{ producto.id }}">{{ producto.descripcion }}</option>
+									{% endfor %}}
+								</select>
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="precio_unitario1" id="precio_unitario1" maxlength="7" />
+								</div>
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="importe1" id="importe1" maxlength="7" size="7" value="0"/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" name="cantidad2" id="cantidad2" maxlength="7" size="7" />
+							</td>
+							<td>
+								<input type="text" name="unidad2" id="unidad2" maxlength="7" size="7" />
+							</td>
+							<td>
+								<select id="productos2" name="productos2">
+									<option>Elige un producto</option>
+									{% for producto in productos %}
+										<option value="{{ producto.id }}">{{ producto.descripcion }}</option>
+									{% endfor %}}
+								</select>
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="precio_unitario2" id="precio_unitario2" maxlength="7" />
+								</div>
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="importe2" id="importe2" maxlength="7" value="0" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								SON: <input type="text" name="monto_letras" id="monto_letras" maxlength="100" size="50" />
+							</td>
+							<td>
+								SUB TOTAL S/.
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="subtotal" id="subtotal" maxlength="7" size="7" value="0"/>
+								</div>
+							</td>
+							
+						</tr>
+						<tr>
+							<td colspan="3">
+								
+							</td>
+							<td>
+								IGV S/.
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="igv" id="igv" maxlength="7" size="7" value="0"/>
+								</div>
+							</td>
+							
+						</tr>
+						<tr>
+							<td colspan="3">
+								
+							</td>
+							<td>
+								TOTAL S/.
+							</td>
+							<td>
+								<div class="input-prepend">
+									<span class="add-on">S/.</span>
+									<input type="text" name="total" id="total" maxlength="7" size="7" value="0"/>
+								</div>
+							</td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<input class="btn" type="submit" value="Grabar Factura">
+			</div>
+	</form>
+
+{% endblock main_content %}
+
+{% block js %}
+	<script>
+	var cont_productos=2;
+	$(function() {$("#fecha").datepicker();});
+
+	$('#nuevo_cliente').on('click',nuevo_cliente);	
+	function nuevo_cliente(){
+		$( "#dialog" ).dialog({
+		autoOpen: false,
+		show: "blind",
+		hide: "explode"
+		});
+	}
+	$('#clientes').on('change',busqueda);
+	function busqueda(){
+		var ruc = $('#clientes').val();
+		$.ajax({
+			data : {'ruc': ruc},
+			url : '/facturacion/busquedaCliente',
+			type : 'get',
+			success : function(data){
+				$('#ruc').val(ruc)
+				$('#direccion').val(data.fields.direccion)
+			}
+		});
+	}
+
+	$('#productos1').on('change',{cont:1},busqueda_productos);
+	$('#productos2').on('change',{cont:2},busqueda_productos);
+	$('#cantidad1').on('blur',{cont:1},calcular_importe);
+	$('#cantidad2').on('blur',{cont:2},calcular_importe);
+	
+	function calcular_importe(event){
+		var suma = 0;
+		var igv = 0;
+		var total = 0;
+		var subtotal=0;
+		var cantidad = $('#cantidad'+event.data.cont).val();
+		var precio_unitario = $('#precio_unitario'+event.data.cont).val();
+		var importe=cantidad*precio_unitario;
+		$('#importe'+event.data.cont).val(importe);
+		for(var i=1;i<cont_productos+1;i++)
+		{
+			subtotal=subtotal+parseFloat($('#importe'+i).val());	
+		}		
+		$('#subtotal').val(subtotal)
+		igv = subtotal*0.18;
+		$('#igv').val(igv)		
+		total=subtotal+igv
+		$('#total').val(total.toFixed(2));
+	}
+
+	function busqueda_productos(event){
+		var id = $('#productos'+event.data.cont).val();
+		$.ajax({
+			data : {'id': id},
+			url : '/facturacion/busquedaProducto',
+			type : 'get',
+			success : function(data){
+				$('#unidad'+event.data.cont).val(data.fields.unidad);
+				$('#precio_unitario'+event.data.cont).val(data.fields.precio);
+			}
+		});
+	}	
+	</script>
+{% endblock js %}
