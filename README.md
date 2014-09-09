@@ -1,0 +1,1 @@
+Este pequeño aplicativo es para aprender django, es un sistemita de ventas que incluye la posibilidad de hacer facturas, todo adaptado al sistema peruano, he usado django, jquery, jquery-ui y bootstrap. Espero que sea de utilidad.
