@@ -185,15 +185,16 @@
 		});
 	}
 	$('#clientes').on('change',busqueda);
-	function busqueda(){
+	function busqueda()
+	{
 		var ruc = $('#clientes').val();
 		$.ajax({
 			data : {'ruc': ruc},
-			url : '/facturacion/busquedaCliente',
+			url : "{% url 'facturacion:busquedaCliente' %}",
 			type : 'get',
 			success : function(data){
-				$('#ruc').val(ruc)
-				$('#direccion').val(data.fields.direccion)
+				$('#ruc').val(data.ruc)
+				$('#direccion').val(data.direccion)
 			}
 		});
 	}

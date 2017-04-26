@@ -26,6 +26,7 @@ class Producto(models.Model):
 class TipoDocumento(models.Model):
     descripcion = models.CharField(max_length=100)
     codigo_sunat = models.CharField(max_length=2)
+
     class Meta:
         verbose_name = ('TipoDocumento')
         verbose_name_plural = ('TipoDocumentos')
@@ -38,6 +39,7 @@ class Serie(models.Model):
     serie = models.CharField(max_length=4, primary_key=True)
     numerador = models.IntegerField()
     tipo_documento = models.ForeignKey(TipoDocumento)
+
     class Meta:
         verbose_name = ('Serie')
         verbose_name_plural = ('Series')

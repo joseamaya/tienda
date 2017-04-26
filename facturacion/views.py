@@ -1,4 +1,6 @@
 # Create your views here.
+import json
+
 from django.shortcuts import render
 from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
 from facturacion.forms import ClienteForm, ProductoForm
@@ -7,7 +9,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 import datetime
 
-from facturacion.models import Factura, DetalleFactura, Cliente, Producto, Serie
+from facturacion.models import Factura, DetalleFactura, Cliente, Producto, Serie, TipoDocumento
+
 
 def completarSerie(s):
 	serie = str(s)
@@ -16,11 +19,15 @@ def completarSerie(s):
 	return serie
 
 def factura(request):
-	serie = Serie.objects.get(pk="0001")
-	serie.numerador = completarSerie(serie.numerador+1)
+	cant_tipos_doc = TipoDocumento.objects.all().count()
+	if cant_tipos_doc==0:
+		return HttpResponseRedirect(reverse('facturacion:nuevo_tipo_documento'))
+	cantserie = Serie.objects.all().count()
+	if cantserie==0:
+		return HttpResponseRedirect(reverse('facturacion:nueva_serie'))
 	clientes = Cliente.objects.order_by('razon_social')
 	productos = Producto.objects.order_by('descripcion')
-	context = {'serie':serie,'clientes':clientes,'productos':productos}
+	context = {'clientes':clientes,'productos':productos}
 	return render(request, 'facturacion/factura.html', context)
 
 def guardarFactura(request):
@@ -58,11 +65,16 @@ def guardarFactura(request):
 class BusquedaCliente(TemplateView):
 
 	def get(self, request, *args, **kwargs):
-		ruc = request.GET['ruc']
-		cliente = Cliente.objects.get(pk=ruc)
-		data = serializers.serialize('json', [cliente])
-		c = data.strip("[]")
-		return HttpResponse(c, mimetype="application/json")
+		if request.is_ajax():
+			ruc = request.GET['ruc']
+			cliente = Cliente.objects.get(pk=ruc)
+			cliente_json = {}
+			cliente_json['ruc'] = cliente.ruc
+			cliente_json['razon_social'] = cliente.razon_social
+			cliente_json['direccion'] = cliente.direccion
+			data = json.dumps(cliente_json)
+			print data
+			return HttpResponse(data, 'application/json')
 
 class BusquedaProducto(TemplateView):
 
@@ -74,32 +86,45 @@ class BusquedaProducto(TemplateView):
 		return HttpResponse(c, mimetype="application/json")
 
 class DetalleCliente(DetailView):
-    model = Cliente
-    template_name = "facturacion/detalle_cliente.html"
-    context_object_name = "cliente"
+	model = Cliente
+	template_name = "facturacion/detalle_cliente.html"
+	context_object_name = "cliente"
 
 class DetalleProducto(DetailView):
-    model = Producto
-    template_name = "facturacion/detalle_producto.html"
-    context_object_name = "producto"
+	model = Producto
+	template_name = "facturacion/detalle_producto.html"
+	context_object_name = "producto"
 
 class Clientes(ListView):
-    model = Cliente
-    template_name = "facturacion/clientes.html"
-    context_object_name = "clientes"
+	model = Cliente
+	template_name = "facturacion/clientes.html"
+	context_object_name = "clientes"
 
 class Productos(ListView):
-    model = Producto
-    template_name = "facturacion/productos.html"
-    context_object_name = "productos"
+	model = Producto
+	template_name = "facturacion/productos.html"
+	context_object_name = "productos"
 
 class NuevoCliente(CreateView):
-    model = Cliente
-    template_name = "facturacion/nuevo_cliente.html"
-    success_url = reverse_lazy("facturacion:factura")
+	model = Cliente
+	fields = ['ruc', 'razon_social', 'direccion']
+	template_name = "facturacion/nuevo_cliente.html"
+	success_url = reverse_lazy("facturacion:factura")
+
+class NuevaSerie(CreateView):
+	model = Serie
+	fields = ['serie', 'numerador', 'tipo_documento']
+	template_name = "facturacion/serie.html"
+	success_url = reverse_lazy("facturacion:factura")
+
+class NuevoTipoDocumento(CreateView):
+	model = TipoDocumento
+	fields = ['descripcion', 'codigo_sunat']
+	template_name = "facturacion/nuevo_tipo_documento.html"
+	success_url = reverse_lazy("facturacion:factura")
 
 class ActualizarProducto(UpdateView):
-    model =	Producto
-    template_name = "noticias/form_producto.html"
-    form_class = ProductoForm
-    success_url = reverse_lazy("facturacion:productos")
+	model =	Producto
+	template_name = "noticias/form_producto.html"
+	form_class = ProductoForm
+	success_url = reverse_lazy("facturacion:productos")
