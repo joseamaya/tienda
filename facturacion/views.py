@@ -48,7 +48,7 @@ def guardarFactura(request):
 		producto2 = Producto.objects.get(pk=p2)
 		cantidad2 = request.POST['cantidad2']
 
-	except Exception, e:
+	except:
 		raise
 	else:
 		factura = Factura(serie=serie,numero=numero,fecha=fecha,subtotal=subtotal,igv=igv,total=total,cliente=cliente)
@@ -73,7 +73,6 @@ class BusquedaCliente(TemplateView):
 			cliente_json['razon_social'] = cliente.razon_social
 			cliente_json['direccion'] = cliente.direccion
 			data = json.dumps(cliente_json)
-			print data
 			return HttpResponse(data, 'application/json')
 
 class BusquedaProducto(TemplateView):
